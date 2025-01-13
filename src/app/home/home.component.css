@@ -1,0 +1,17 @@
+.plate-visualization {
+    border: 2px solid #333;
+    position: relative;
+    background: #f8f9fa;
+    margin: 1rem 0;
+  }
+
+  .cut {
+    position: absolute;
+    border: 1px solid #007bff;
+    background: rgba(0, 123, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    margin: 2px;
+  }

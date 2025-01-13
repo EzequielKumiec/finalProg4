@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { NewOrderComponent } from './new-order/new-order.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [NewOrderComponent],
+  imports: [NewOrderComponent,RouterModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

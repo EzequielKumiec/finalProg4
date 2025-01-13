@@ -1,0 +1,44 @@
+<div class="container mt-4">
+    <div class="row mb-4">
+      <div class="col">
+        <h2>Optimización de Cortes</h2>
+        
+        <div class="form-group">
+          <select class="form-select" [(ngModel)]="selectedOrderId" (change)="onOrderSelected()">
+            <option value="">Seleccione un pedido</option>
+            <option *ngFor="let order of orders" [value]="order.id">
+              {{order.client}} - {{order.username}} ({{formatDate(order.deliveryDate)}})
+            </option>
+          </select>
+        </div>
+
+        <button class="btn btn-primary mt-3" 
+                [disabled]="!selectedOrderId" 
+                (click)="optimizeOrder()">
+          Optimizar
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="optimizedPlates.length" class="row">
+      <div class="col">
+        <h3>Resultado de la Optimización</h3>
+        
+        <div class="plates-container">
+          <div *ngFor="let plate of optimizedPlates; let i = index" class="plate mb-4">
+            <h4>Placa {{i + 1}} - Eficiencia: {{plate.efficiency.toFixed(2)}}%</h4>
+            <div class="plate-visualization" 
+                 [style.width.px]="800" 
+                 [style.height.px]="600">
+              <div *ngFor="let cut of plate.cuts" 
+                   class="cut" 
+                   [style.width.px]="cut.width"
+                   [style.height.px]="cut.height">
+                {{cut.width}}x{{cut.height}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
