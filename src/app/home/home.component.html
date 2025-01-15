@@ -12,33 +12,43 @@
           </select>
         </div>
 
-        <button class="btn btn-primary mt-3" 
-                [disabled]="!selectedOrderId" 
-                (click)="optimizeOrder()">
-          Optimizar
-        </button>
-      </div>
-    </div>
-
-    <div *ngIf="optimizedPlates.length" class="row">
-      <div class="col">
-        <h3>Resultado de la Optimización</h3>
-        
-        <div class="plates-container">
-          <div *ngFor="let plate of optimizedPlates; let i = index" class="plate mb-4">
-            <h4>Placa {{i + 1}} - Eficiencia: {{plate.efficiency.toFixed(2)}}%</h4>
-            <div class="plate-visualization" 
-                 [style.width.px]="800" 
-                 [style.height.px]="600">
-              <div *ngFor="let cut of plate.cuts" 
-                   class="cut" 
-                   [style.width.px]="cut.width"
-                   [style.height.px]="cut.height">
-                {{cut.width}}x{{cut.height}}
-              </div>
-            </div>
-          </div>
+        <div class="d-flex gap-2 mt-3">
+          <button class="btn btn-primary" 
+                  [disabled]="!selectedOrderId" 
+                  (click)="optimizeOrder()">
+            Optimizar
+          </button>
+          <button type="button" class="btn btn-primary" (click)="NuevaOrden()">
+            <i class="fas fa-plus-circle"></i> Nueva orden
+          </button>
         </div>
       </div>
     </div>
+
+    @if (optimizedPlates.length) {
+      <div class="row">
+        <div class="col">
+          <h3>Resultado de la Optimización</h3>
+          
+          <div class="plates-container">
+            @for (plate of optimizedPlates; track $index; let i = $index) {
+              <div class="plate mb-4">
+                <h4>Placa {{i + 1}} - Eficiencia: {{plate.efficiency.toFixed(2)}}%</h4>
+                <div class="plate-visualization" 
+                     [style.width.px]="800" 
+                     [style.height.px]="600">
+                  @for (cut of plate.cuts; track $index) {
+                    <div class="cut" 
+                         [style.width.px]="cut.width"
+                         [style.height.px]="cut.height">
+                      {{cut.width}}x{{cut.height}}
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    }
   </div>

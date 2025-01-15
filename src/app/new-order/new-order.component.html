@@ -32,19 +32,19 @@
           <label class="form-label required">Proveedor Placa</label>
           <select class="form-select" formControlName="providerId">
             <option value="">Seleccione el proveedor</option>
-            <option *ngFor="let provider of providers" [value]="provider.id">
-              {{provider.name}}
-            </option>
+            @for (provider of providers; track provider.id) {
+              <option [value]="provider.id">{{provider.name}}</option>
+            }
           </select>
         </div>
-
+        
         <div class="mb-3">
           <label class="form-label required">Color Placa</label>
           <select class="form-select" formControlName="providerColorId">
             <option value="">Seleccione el color</option>
-            <option *ngFor="let color of colors" [value]="color.id">
-              {{color.name}}
-            </option>
+            @for (color of colors; track color.id) {
+              <option [value]="color.id">{{color.name}}</option>
+            }
           </select>
         </div>
       </div>

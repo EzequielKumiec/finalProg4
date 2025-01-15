@@ -2,18 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-
-export interface Cut {
-  width: number;
-  height: number;
-}
-
-export interface PlateWithCuts {
-  cuts: Cut[];
-  usedArea: number;
-  totalArea: number;
-  efficiency: number;
-}
+import { Cut } from "../app/Models/Cut";
+import { PlateWithCuts } from "../app/Models/PlateWithCuts";
 
 @Injectable({
   providedIn: 'root'

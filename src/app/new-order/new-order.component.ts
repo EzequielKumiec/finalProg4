@@ -4,31 +4,10 @@ import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } fr
 import { Router } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { switchMap } from 'rxjs/operators';
-
-interface Provider {
-  id: string;
-  name: string;
-}
-
-interface Color {
-  id: string;
-  name: string;
-  providerId: string;
-}
-
-interface Cut {
-  width: number;
-  height: number;
-}
-
-interface Order {
-  deliveryDate: string;
-  client: string;
-  username: string;
-  providerId: string;
-  providerColorId: string;
-  requestedCuts: Cut[];
-}
+import { OrderService } from '../order.service';
+import { Provider } from "../Models/Provider";
+import { Color } from "../Models/Color";
+import { Order } from "../Models/Order";
 
 @Component({
   selector: 'app-new-order',
@@ -51,7 +30,7 @@ export class NewOrderComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private http: HttpClient,
+    private orderService: OrderService,
     private router: Router
   ) {
     this.orderForm = this.fb.group({
@@ -71,7 +50,7 @@ export class NewOrderComponent implements OnInit {
   }
 
   private loadProviders(): void {
-    this.http.get<Provider[]>('https://6317ca93f6b281877c5d7785.mockapi.io/providers')
+    this.orderService.getProviders()
       .subscribe(providers => {
         this.providers = providers;
       });
@@ -81,7 +60,7 @@ export class NewOrderComponent implements OnInit {
     this.orderForm.get('providerId')?.valueChanges
       .pipe(
         switchMap(providerId => 
-          this.http.get<Color[]>(`https://6317ca93f6b281877c5d7785.mockapi.io/providers/${providerId}/colors`)
+          this.orderService.getProviderColors(providerId)
         )
       )
       .subscribe(colors => {
@@ -112,15 +91,19 @@ export class NewOrderComponent implements OnInit {
   }
 
   async validateDeliveryDate(date: string): Promise<boolean> {
-    const response = await this.http.get<Order[]>('https://674531d6b4e2e04abea50775.mockapi.io/orders').toPromise();
-    const orders = response || [];
-    
+    const orders = await this.orderService.getOrders().toPromise();
+  
+    if (!orders) {
+      return false;
+    }
+  
     const cutsOnSelectedDate = orders
       .filter(order => order.deliveryDate === date)
       .reduce((total, order) => total + order.requestedCuts.length, 0);
-
+  
     return (cutsOnSelectedDate + this.cutsFormArray.length) <= this.MAX_CUTS_PER_DAY;
   }
+  
 
   async onSubmit(): Promise<void> {
     if (this.orderForm.valid) {
@@ -137,16 +120,15 @@ export class NewOrderComponent implements OnInit {
         deliveryDate: this.formatDate(deliveryDate)
       };
 
-      this.http.post('https://674531d6b4e2e04abea50775.mockapi.io/orders', order)
-  .subscribe({
-    next: () => {
-      this.router.navigate(['']); 
-    },
-    error: (err) => {
-      console.error('Error al crear el pedido:', err);
-      alert('Hubo un problema al crear el pedido. Inténtalo de nuevo.');
-    }
-  });
+      this.orderService.createOrder(order).subscribe({
+        next: () => {
+          this.router.navigate(['']);
+        },
+        error: (err) => {
+          console.error('Error al crear el pedido:', err);
+          alert('Hubo un problema al crear el pedido. Inténtalo de nuevo.');
+        }
+      });
     }
   }
 

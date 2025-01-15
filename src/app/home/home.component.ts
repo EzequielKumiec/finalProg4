@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { OptimizationService, PlateWithCuts } from '../optimization.service';
+import { OptimizationService } from '../optimization.service';
+import { PlateWithCuts } from '../Models/PlateWithCuts';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -17,7 +19,8 @@ export class HomeComponent implements OnInit {
   selectedOrder: any = null;
   optimizedPlates: PlateWithCuts[] = [];
 
-  constructor(private optimizationService: OptimizationService) {}
+  constructor(private optimizationService: OptimizationService,
+      private router: Router) {}
 
   ngOnInit() {
     this.loadOrders();
@@ -43,5 +46,8 @@ export class HomeComponent implements OnInit {
   formatDate(dateStr: string): string {
     const [day, month, year] = dateStr.split('-');
     return `${day}/${month}/${year}`;
+  }
+  NuevaOrden(){
+    this.router.navigate(['new-order']);
   }
 }
